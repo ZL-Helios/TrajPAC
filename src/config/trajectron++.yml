@@ -1,0 +1,37 @@
+# ------------------- TRAJECTRON ++ CONFIGURATION -------------------
+
+project_root: '../../Trajectron++'
+
+# pretrained model path relative to the project root directory
+pretrained_dir:
+  sdd: ''
+  eth: './experiments/pedestrians/models/saved_models/eth_vel'
+  hotel: './experiments/pedestrians/models/saved_models/hotel_vel'
+  univ: './experiments/pedestrians/models/saved_models/univ_vel'
+  zara1: './experiments/pedestrians/models/saved_models/zara1_vel'
+  zara2: './experiments/pedestrians/models/saved_models/zara2_vel'
+
+# saved model checkpoint
+checkpoint: 100
+num_trajectories: 20
+
+# test data file path
+data_dir:
+  sdd: ''
+  eth: './experiments/processed/eth_test.pkl'
+  hotel: './experiments/processed/hotel_test.pkl'
+  univ: './experiments/processed/univ_test.pkl'
+  zara1: './experiments/processed/zara1_test.pkl'
+  zara2: './experiments/processed/zara2_test.pkl'
+
+node_type: 'PEDESTRIAN'
+output_path: 'results'
+output_tag: 'test'
+
+# python evaluate.py
+# --model models/saved_models/eth_vel         # NOTE : pretrained model/log folder 
+# --checkpoint 100
+# --data ../processed/eth_test.pkl            # NOTE : test data file
+# --output_path results                       # NOTE : dir to store results
+# --output_tag eth_vel                        # NOTE : result file suffix
+# --node_type PEDESTRIAN

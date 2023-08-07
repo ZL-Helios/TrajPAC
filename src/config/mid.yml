@@ -1,0 +1,9 @@
+# ------------------- MID CONFIGURATION -------------------
+
+project_root: '../../MID'
+
+config: 'configs/baseline.yaml'
+#dataset: 'eth' *overwritten by DeepPAC arguments*
+
+eval: True
+checkpoint: 90

@@ -1,0 +1,13 @@
+# ------------------- PECNET CONFIGURATION -------------------
+
+project_root: '../../PECNet'
+
+pretrained_dir:
+  sdd: './saved_models/PECNET_social_model1.pt'
+  eth: './saved_models/PECNET_social_model_eth.pt'
+  hotel: './saved_models/PECNET_social_model_hotel.pt'
+  univ: './saved_models/PECNET_social_model_univ.pt'
+  zara1: './saved_models/PECNET_social_model_zara1.pt'
+  zara2: './saved_models/PECNET_social_model_zara2.pt'
+
+num_trajectories: 20

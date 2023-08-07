@@ -1,0 +1,25 @@
+# ------------------- MG-GAN CONFIGURATION -------------------
+
+project_root: '../../MG-GAN'
+
+
+# pretrained model path (7 generators) relative to the project root directory
+pretrained_dir:
+  sdd: ''
+  eth: './logs/7gens_biwi/version_0'
+  hotel: './logs/7gens_biwi/version_4'
+  univ: './logs/7gens_biwi/version_1'
+  zara1: './logs/7gens_biwi/version_2'
+  zara2: './logs/7gens_biwi/version_3'
+
+checkpoint: best
+phase: test
+
+num_preds: 20
+pred_strat: smart_expected  # type of sampling strategy (all, sampling, expected, smart_expected)
+
+split: all    # Only relevant for synthetic dataset. Evaluate on upper or lower intersection
+radius: 3.0   # Radius to be used for the computation of Precision and Recall metrics
+
+
+

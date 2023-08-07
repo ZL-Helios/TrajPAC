@@ -1,0 +1,15 @@
+asposestorage==1.0.2
+cvxpy==1.2.1
+dataset==1.6.0
+dill==0.3.6
+easydict==1.9
+matplotlib==3.7.1
+model==0.6.0
+numpy==1.23.2
+pandas==1.5.3
+Pillow==9.4.0
+PyYAML==6.0
+scikit_learn==1.2.2
+torch==1.12.1
+torchvision==0.13.1
+tqdm==4.64.1
