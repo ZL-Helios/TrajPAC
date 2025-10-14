@@ -1,5 +1,6 @@
 # TrajRS: Towards Certified Robustness and Defense in Trajectory Prediction
-TrajRS is a trajectory prediction framework which provides a certified robust radius and defense against attacks.
+
+TrajRS is the upgraded v2.0 release of TrajPAC, a trajectory prediction framework which provides a certified robust radius and defense against attacks. Building upon the original PAC-based verification core, TrajRS integrates Randomized Smoothing to provide precise certified robust radii and built-in defense capabilities. This update extends TrajPAC from verification-only analysis to a fully certified, safety-assured tool for trustworthy autonomous driving prediction systems.
 
 ## Installation
 ### Bare-bones Framework
@@ -90,6 +91,7 @@ By default, all evaluation and certified radii results in ADE metric are saved i
 
 ## Analysis on Custom Models
 To perform TrajRS analysis on your custom models, you need to add black box functions for trajectory predictions at *individual samples* (i.e., for a single fid/pid tuple) into the `TrajRS/src/external/modules/<custom_model>` directory. The `scenario.py` script is used for generating noisy historical trajectories and saving them as pooled data. The `dataset_custom.py` and `model_custom.py` scripts are for fetching individual fid/pid samples from your dataset and making predictions on those individual samples.
+
 
 
 
