@@ -1,17 +1,17 @@
-﻿# TrajPAC: PAC robustness analysis for trajectory forecasting
-TrajPAC is a framework for the robustness analysis of trajectory prediction models from a probably approximately correct viewpoint. This repository contains the code for our paper: [TrajPAC: Towards Robustness Verification of Pedestrian Trajectory Prediction Models](https://arxiv.org/abs/2308.05985).
+# TrajRS: Towards Certified Robustness and Defense in Trajectory Prediction
+TrajRS is a trajectory prediction framework which provides a certified robust radius and defense against attacks.
 
 ## Installation
 ### Bare-bones Framework
-Our verification method applies to any black-box trajectory prediction model. To install just the basics, we can run the following:
+Our framework applies to any black-box trajectory prediction model. To install just the basics, we can run the following:
 ```
-conda create --name TrajPAC python=3.10
-conda activate TrajPAC
+conda create --name TrajRS python=3.10
+conda activate TrajRS
 pip install -r requirements.txt
 ```
 
 ### Experiments
-To run TrajPAC on the forecasting models analyzed in our paper, we'll need to first install each (pretrained) model separately.
+To run TrajRS on the forecasting models, we'll need to first install each (pretrained) model separately.
 
 | Model  | Source Code |
 | ------------- | ------------- |
@@ -20,28 +20,30 @@ To run TrajPAC on the forecasting models analyzed in our paper, we'll need to fi
 | [AgentFormer](https://arxiv.org/abs/2103.14023)  | <https://github.com/Khrylx/AgentFormer>  |
 | [MID](https://arxiv.org/abs/2203.13777)  | <https://github.com/Gutianpei/MID>  |
 
-We recommend first cloning the TrajPAC environment using ``$ conda create --name AgentFormer --clone TrajPAC`` and then installing each project's dependencies in the cloned environment. 
+We recommend first cloning the TrajRS environment using ``$ conda create --name MID --clone TrajRS`` and then installing each project's dependencies in the cloned environment. 
 
 ### Datasets
-We provide the original raw and annotated ETH/UCY dataset [here](https://drive.google.com/drive/folders/1_LTzD3vLVKSBoQ6aWsAcwGgs-HGmIAcM?usp=sharing). The raw data includes both the original recorded scenes as well as their homography mappings. Since most prediction models train on some transformed version of the data, having the raw data allows us to visualize specific instances within each scene across all models.
+In the `src/samples/` directory, we have prepared a subset of 500 samples from the ETH/UCY Dataset (`eth.txt`) and another subset of 500 samples from the Stanford Drone Dataset (`sdd.txt`) as examples for testing the smoothed MID model. The complete datasets of the ETH/UCY Dataset and the Stanford Drone Dataset are stored in the `src/data/` directory. To test the certified radius of other samples from the ETH/UCY and Stanford Drone Datasets, simply organize the data in the same format as `eth.txt` and place it in the `src/samples/` directory.
 
 ### Project Structure
 Once completed, organize the structure of the workspace as follows:
 ```
 workspace
 ├── Trajectron++
-├── MemoNet-ETH
+├── MemoNet
 ├── AgentFormer
 ├── MID
-└── TrajPAC 
+└── TrajRS 
     └── src
         ├── __main__.py
         ├── requirements.txt
         ├── data
         │   ├── eth_ucy
-        │   └── ethucy.py
-        ├── images
-        ├── logs
+        │   └── sdd
+        ├── samples
+        │   ├── eth.txt
+        │   └── sdd.txt
+        ├── final_result
         ├── pool_data
         ├── external
         │   └── modules
@@ -65,36 +67,32 @@ workspace
         │   ├── arc.py
         │   ├── auxiliary.py
         │   ├── gateway.py
-        │   ├── log.py
-        │   ├── metrics.py
-        │   ├── sensitivity.py
-        │   └── visualize.py
+        │   └── metrics.py
         └── verify
-            ├── pac_robust.py
+            ├── RS_robust.py
             └── radius.py
 ```
 
 ## Robustness Analysis
-To analyze the PAC robustness of a model we can run `__main__.py` in the `TrajPAC/src` directory with key arguments specified by:
+To analyze the certified robustness radius of a smoothed model we can run `__main__.py` in the `TrajRS/src` directory with key arguments specified by:
+* `--files`: which data file to verify (file name of the subset from the dataset of ETH/UCY or SDD in `TrajRS/src/samples/`)
 * `--net`: which network to verify --Traj++, MemoNet, AgentFormer, MID
-* `--dataset`: which scene in the ETH/UCY dataset to verify
-* `--fid`: which frame ID of the given scene to analyze
-* `--pid`: which path ID of the given frame to analyze
-* `--radius`: the defined robustness radius
-* `--epsilon`: the error rate of the PAC model
-* `--eta`: the significance level of the PAC model
-* `--robust_type`: use either the 'pure' or 'label' robustness metric
-* `--FThreshold`: number of samples to use in the first focused learning phase
-* `--SThreshold`: number of samples to use in the second focused learning phase
-* `--adversary`: the adversarial attack method --linear or pgd
-* `--log_ext`: extension of the log file to be saved
+* `--dataset`: which dataset to verify ('eth' for the ETH/UCY dataset and 'sdd' for the Stanford Drone Dataset)
+* `--FThreshold`: sampling times n of the TrajRS model
+* `--predictnumber`: sampling prediction times n_p for the same sample of the TrajRS model
+* `--gaussiansigma`: Gaussian noise parameter sigma of the TrajRS model
+* `--alpha`: the significance level of the TrajRS model
 
-An example of a fully fleshed out command that performs robustness analysis on Trajectron++ at frame 4400 and path 79 from scene Zara1 is given by
-```python . --net Traj++ --gpu --dataset zara1 --radius 0.03 --epsilon 0.01 --eta 0.01 --attack_scope full --adversary linear --robust_type pure --score_fn ade --fid 4400 --pid 79 -FT 30000 -ST 12000 --log_ext analysis --plot_heatmap --plot_sens --plot_traj```
+An example of a fully fleshed out command that performs certified robustness radii analysis on MID at the ETH/UCY dataset is given by
+```python . --files eth --net MID --dataset eth --gpu --FThreshold 10000 --predictnumber 1 --gaussiansigma 0.4 --alpha 0.001```
 
-By default, all visualizations are saved in the `TrajPAC/src/images/` folder and all log files containing the optimization details (e.g., PAC upper bounds) are saved in the `TrajPAC/src/logs/` folder.
+By default, all evaluation and certified radii results in ADE metric are saved in the `TrajRS/src/final_result/` folder. All evaluation and certified radii results in FDE metric are saved in the `TrajRS/src/fde_final_result/` folder. Predictions of the smoothed model can be found in line "output_clustering" of the csv file. Radii of "robustness for the optimal prediction" can be found in line "r_safe_1" of the csv file and radii of "robustness for all possible predictions" can be found in line "r_safe_N" of the csv file.
 
 ## Analysis on Custom Models
-To perform PAC robustness analysis on your custom models, you need to add black box functions for trajectory predictions at *individual samples* (i.e., for a single fid/pid tuple) into the `TrajPAC/src/external/modules/<custom_model>` directory. The `scenario.py` script is used for generating noisy historical trajectories and saving them as pooled data. The `dataset_custom.py` and `model_custom.py` scripts are for fetching individual fid/pid samples from your dataset and making predictions on those individual samples.
+To perform TrajRS analysis on your custom models, you need to add black box functions for trajectory predictions at *individual samples* (i.e., for a single fid/pid tuple) into the `TrajRS/src/external/modules/<custom_model>` directory. The `scenario.py` script is used for generating noisy historical trajectories and saving them as pooled data. The `dataset_custom.py` and `model_custom.py` scripts are for fetching individual fid/pid samples from your dataset and making predictions on those individual samples.
+
+
+
+
 
 
